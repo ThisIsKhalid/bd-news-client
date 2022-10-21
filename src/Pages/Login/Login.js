@@ -1,26 +1,68 @@
-import React from 'react';
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider/AuthProvider";
+import toast from "react-hot-toast";
 
 const Login = () => {
-    return (
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Login
-        </Button>
-        <Form.Text className="text-danger ms-3">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form>
-    );
+  const { user, login } = useContext(AuthContext);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/';
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+
+    const email = form.email.value;
+    const password = form.password.value;
+
+    login(email, password)
+      .then((res) => {
+        console.log(res.user);
+        setError("");
+        form.reset();
+        // navigate('/');
+        if(user?.emailVerified){
+          navigate(from, { replace: true });
+        }
+        else{
+          toast.error('Your email is not verified. please check your email.')
+        }
+      })
+      .catch((error) => setError(error.message));
+  };
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
+          name="email"
+          type="email"
+          placeholder="Enter email"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+        />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Login
+      </Button>
+      <Form.Text className="text-danger ms-3">{error}</Form.Text>
+    </Form>
+  );
 };
 
 export default Login;
