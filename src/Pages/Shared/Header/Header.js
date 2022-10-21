@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
+import Image from "react-bootstrap/Image";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -7,10 +8,15 @@ import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 import LeftSideNav from "../LeftSideNav/LeftSideNav";
-import Image from "react-bootstrap/Image";
 
 const Header = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleLogOut = () => {
+    logOut()
+      .then()
+      .catch((error) => console.error(error));
+  };
 
   return (
     <Navbar
@@ -27,8 +33,8 @@ const Header = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#features">All News</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link href="">All News</Nav.Link>
+            <Nav.Link href="">Pricing</Nav.Link>
             <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -54,7 +60,19 @@ const Header = () => {
                 <FaUser></FaUser>
               )}
             </Nav.Link>
-            <Nav.Link className="text-primary">{user?.displayName}</Nav.Link>
+            <Nav>
+              {user?.uid ? (
+                <>
+                  <span>{user?.displayName}</span>
+                  <Link className="ms-3 btn btn-danger" onClick={handleLogOut}>Logout</Link>
+                </>
+              ) : (
+                <>
+                  <Link className="ms-3 btn btn-primary" to="/login">Login</Link>
+                  <Link className="ms-3 btn btn-primary" to="/register">Register</Link>
+                </>
+              )}
+            </Nav>
           </Nav>
           <div className="d-lg-none">
             <LeftSideNav></LeftSideNav>
