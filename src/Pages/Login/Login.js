@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthProvider/AuthProvider";
 import toast from "react-hot-toast";
 
 const Login = () => {
-  const { user, login } = useContext(AuthContext);
+  const { login, setLoading } = useContext(AuthContext);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,18 +22,22 @@ const Login = () => {
 
     login(email, password)
       .then((res) => {
-        console.log(res.user);
+        const user = res.user;
+        // console.log(res.user);
         setError("");
         form.reset();
         // navigate('/');
-        if(user?.emailVerified){
+        if(user.emailVerified){
           navigate(from, { replace: true });
         }
         else{
           toast.error('Your email is not verified. please check your email.')
         }
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => setError(error.message))
+      .finally(() => {
+        setLoading(false);
+      })
   };
 
   return (

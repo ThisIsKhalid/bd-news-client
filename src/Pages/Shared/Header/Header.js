@@ -47,11 +47,11 @@ const Header = () => {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-          <Nav>
-            <Nav.Link>
+          <Nav className="d-flex align-items-center">
+            <Link to='/profile'>
               {user?.photoURL ? (
                 <Image
-                  style={{ height: "40px" }}
+                  style={{ height: "30px" }}
                   roundedCircle
                   src={user.photoURL}
                   alt=""
@@ -59,11 +59,11 @@ const Header = () => {
               ) : (
                 <FaUser></FaUser>
               )}
-            </Nav.Link>
+            </Link>
             <Nav>
               {user?.uid ? (
                 <>
-                  <span>{user?.displayName}</span>
+                  <span className="d-flex align-items-center text-primary h5">{user?.displayName}</span>
                   <Link className="ms-3 btn btn-danger" onClick={handleLogOut}>Logout</Link>
                 </>
               ) : (
