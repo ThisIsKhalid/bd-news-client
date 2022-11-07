@@ -8,6 +8,9 @@ import News from "../../Pages/News/News/News";
 import Profile from "../../Pages/Others/Profile";
 import TermsAndConditions from "../../Pages/Others/TermsAndConditions";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 export const router = createBrowserRouter([
   {
